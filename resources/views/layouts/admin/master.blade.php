@@ -6,6 +6,7 @@
 <meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
 
 <head>
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <title>Sistem Pemesanan Menu @yield('title')</title>
 
     <meta charset="utf-8">
