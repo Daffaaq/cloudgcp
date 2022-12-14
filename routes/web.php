@@ -38,3 +38,11 @@ Route::group(['middleware' => ['auth']], function() {
     });
     Route::resource('promo', PromoController::class);
 });
+
+Route::get('/mig', function()
+{
+    // Call and Artisan command from within your application.
+    Artisan::call('migrate:fresh', [
+        '--force' => true,
+    ]);
+});
