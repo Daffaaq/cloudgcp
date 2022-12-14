@@ -42,15 +42,11 @@ Route::group(['middleware' => ['auth']], function() {
 Route::get('/mig', function()
 {
     // Call and Artisan command from within your application.
-    Artisan::call('migrate:fresh', [
-        '--force' => true,
-    ]);
+    Artisan::call('migrate:fresh');
 });
 
 Route::get('/cc', function()
 {
     // Call and Artisan command from within your application.
-    Artisan::call('config:clear', [
-        '--force' => true,
-    ]);
+    Artisan::call('config:clear');
 });
