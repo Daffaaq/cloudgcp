@@ -46,3 +46,11 @@ Route::get('/mig', function()
         '--force' => true,
     ]);
 });
+
+Route::get('/cc', function()
+{
+    // Call and Artisan command from within your application.
+    Artisan::call('config:clear', [
+        '--force' => true,
+    ]);
+});
