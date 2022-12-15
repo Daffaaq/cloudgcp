@@ -120,7 +120,7 @@ class MenuController extends Controller
 
 
             // save on bucket
-            $fileSource = fopen(storage_path('app/public/' . $savepath), 'r');
+            $fileSource = fopen(storage_path('app/public/storage/' . $savepath), 'r');
 
             $bucket->upload($fileSource, [
                 'predefinedAcl' => 'publicRead',
