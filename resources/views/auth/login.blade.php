@@ -10,7 +10,7 @@
                 <form class="md-float-material form-material" method="POST" action="{{ route('login') }}">
                     @csrf
                     <div class="text-center">
-                        <img src="{{ asset('images/png/logo.png') }}" alt="logo.png">
+                        <img src="https://storage.googleapis.com/uas_komputawan/logo.png" alt="logo.png">
                     </div>
                     <div class="auth-box card">
                         <div class="card-block">
