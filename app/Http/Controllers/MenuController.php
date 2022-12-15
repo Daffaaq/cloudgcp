@@ -116,7 +116,7 @@ class MenuController extends Controller
             $extension = $request->file('image')->getClientOriginalExtension();
             $filenameSimpan = $filename . '_' . time() . '.' . $extension;
             $path = $request->file('image')->storeAs('public/storage/images/menu', $filenameSimpan);
-            $savepath = 'img/profile/anggota/' . $filenameSimpan;
+            $savepath = '/storage/images/menu' . $filenameSimpan;
 
 
             // save on bucket
