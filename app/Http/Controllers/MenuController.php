@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Menu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Google\Cloud\Storage\StorageClient;
 
 class MenuController extends Controller
 {
@@ -99,12 +100,41 @@ class MenuController extends Controller
         $menu->price = $request->get('price');
         $menu->desc = $request->get('desc');
         if ($request->file('image')) {
+            // config with gcp
+            $googleConfigFile = file_get_contents(config_path('key.json'));
+            $storage = new StorageClient([
+                'keyFile' => json_decode($googleConfigFile, true)
+            ]);
+            $storageBucketName = config('googlecloud.storage_bucket');
+            $bucket = $storage->bucket($storageBucketName);
             if ($menu->image&&file_exists(storage_path('app/public/'.$menu->image))) {
                 \Storage::delete('public/'.$menu->image);
+                $bucket->object($menu->foto)->delete();
             }
-            $image_name = $request->file('image')->store('images/menu', 'public');
-            $menu->image = $image_name;
+            $filenameWithExt = $request->file('image')->getClientOriginalName();
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            $extension = $request->file('image')->getClientOriginalExtension();
+            $filenameSimpan = $filename . '_' . time() . '.' . $extension;
+            $path = $request->file('image')->storeAs('public/storage/images/menu', $filenameSimpan);
+            $savepath = 'img/profile/anggota/' . $filenameSimpan;
+
+
+            // save on bucket
+            $fileSource = fopen(storage_path('app/public/' . $savepath), 'r');
+
+            $bucket->upload($fileSource, [
+                'predefinedAcl' => 'publicRead',
+                'name' => $savepath
+            ]);
+        } else {
+            // tidak ada file yang diupload
+            $savepath = $menu->image;
+            // $image_name = $request->file('image')->store('images/menu', 'public');
+            // $menu->image = $image_name;
         }
+
+        $menu->image = $savepath;
+        //save
         $menu->save();
 
         return redirect()->route('daftar_menu.index');
@@ -118,7 +148,18 @@ class MenuController extends Controller
      */
     public function destroy($id)
     {
+        // config with gcp
+        $googleConfigFile = file_get_contents(config_path('googlecloud.json'));
+        $storage = new StorageClient([
+            'keyFile' => json_decode($googleConfigFile, true)
+        ]);
+        $storageBucketName = config('googlecloud.storage_bucket');
+        $bucket = $storage->bucket($storageBucketName);
+
         Menu::find($id)->delete();
+        // delete on bucket
+        $object = $bucket->object($image);
+        $object->delete();
         return redirect()->route('daftar_menu.index');
 
     }
