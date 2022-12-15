@@ -149,7 +149,7 @@ class MenuController extends Controller
     public function destroy($id)
     {
         // config with gcp
-        $googleConfigFile = file_get_contents(config_path('googlecloud.json'));
+        $googleConfigFile = file_get_contents(config_path('key.json'));
         $storage = new StorageClient([
             'keyFile' => json_decode($googleConfigFile, true)
         ]);
